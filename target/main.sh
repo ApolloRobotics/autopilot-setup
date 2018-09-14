@@ -87,6 +87,7 @@ run_script_as root $INSTALLER_DIR/modules/redis-setup.sh
 run_script_as $USER_NAME $INSTALLER_DIR/modules/python-setup.sh
 run_script_as $USER_NAME $INSTALLER_DIR/modules/node-setup.sh
 run_script_as $USER_NAME $INSTALLER_DIR/modules/ouster-setup.sh
+run_script_as $USER_NAME $INSTALLER_DIR/modules/serialnumber.sh
 run_script_as $USER_NAME $INSTALLER_DIR/modules/autopilot-core-setup.sh
 # dev env only
 run_script_as $USER_NAME $INSTALLER_DIR/modules/sh-env-setup.sh
