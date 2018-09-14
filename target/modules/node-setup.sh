@@ -1,4 +1,5 @@
 # Installs the latest verision of nvm
+cd $HOME
 export NVM_DIR="$HOME/.nvm" && (
 git clone https://github.com/creationix/nvm.git "$NVM_DIR"
 cd "$NVM_DIR"

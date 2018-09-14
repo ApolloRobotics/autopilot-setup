@@ -1,37 +1,49 @@
 #!/bin/bash
 
-# Helper function for running a script as a user, in their home directory.
-# Arg1: user
-# Arg2: script
-run_script_as() {
-  sudo -H -u $1 bash -c "cd ~ && bash" < $2
-}
+# Prevent running as sudo, and preload the authentication
+if [[ $EUID -eq 0 ]]; then
+  echo "This script should not be run as root"
+  exit 1
+else
+  echo "Some parts of this script require root privilege please enter your password to continue"
+  sudo true
+fi
 
-# Create user account and required permissions
-USER_NAME="apollo"
-export $USER_NAME
-adduser --disabled-password --gecos "" $USER_NAME
-usermod -a -G sudo,uucp,dialout,video $USER_NAME
-usermod -a -G uucp,dialout,video root
+# Define script location variables
+export SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export ROOTFS=Linux_for_Tegra/rootfs
 
-# Remove default user accounts
-sudo userdel -rfRZ nvidia
-sudo userdel -rfRZ ubuntu
+# Set up L4T and apply patches if it hasn't been done already
+if [ ! -d "Linux_for_Tegra" ]; then
 
-# Update and install system dependancies 
-export DEBIAN_FRONTEND=noninteractive
-sudo apt-get update && apt-get upgrade -y
-sudo apt-get install -yq curl screen python-dev build-essential cmake lm-sensors git vim dnsmasq
-#TODO: Verify
-#sudo apt-get install -yq ppp sshpass 
-#TODO: Verify
-#sudo apt-get install -yq libxml2-dev libxslt1-dev libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libusb-1.0-0-dev libswscale-dev python-numpy libtbb2 libtbb-dev libpng-dev libjpeg-dev libtiff-dev libjasper-dev libdc1394-22-dev python-gst0.10 icecast2
+  export FILE_SERVER="https://s3.us-east-2.amazonaws.com/apollorobotics-public/nvidia-files"
+  export ver="28.2.1"
+  export DRIVER_ARCHIVE="Tegra186_Linux_R${ver}_aarch64.tbz2"
+  export SAMPLE_ROOTFS="Tegra_Linux_Sample-Root-Filesystem_R${ver}_aarch64.tbz2"
 
-run_script_as root redis-setup.sh
-run_script_as $USER_NAME python-setup.sh
-run_script_as $USER_NAME node-setup.sh
-run_script_as root ros-setup.sh
-run_script_as $USER_NAME ouster-setup.sh
-run_script_as $USER_NAME autopilot-core-setup.sh
-# dev only
-run_script_as $USER_NAME sh-env-setup.sh
+  # Download Nvidia flashing files
+  if [ ! -f $SCRIPT_DIR/$DRIVER_ARCHIVE ]; then
+      wget $FILE_SERVER/$DRIVER_ARCHIVE
+  fi
+  if [ ! -f $SCRIPT_DIR/$SAMPLE_ROOTFS ]; then
+      wget $FILE_SERVER/$SAMPLE_ROOTFS
+  fi
+
+  # Unpack Drivers
+  tar xjvf $SCRIPT_DIR/$DRIVER_ARCHIVE
+
+  # Unpack sample filesystem
+  cp $SCRIPT_DIR/$SAMPLE_ROOTFS $SCRIPT_DIR/Linux_for_Tegra/rootfs && cd $_
+  sudo tar xjvf $SCRIPT_DIR/Linux_for_Tegra/rootfs/$SAMPLE_ROOTFS
+  rm $SCRIPT_DIR/Linux_for_Tegra/rootfs/$SAMPLE_ROOTFS
+
+  # Install drivers to sample filesystem
+  sudo $SCRIPT_DIR/Linux_for_Tegra/apply_binaries.sh
+
+  # Patch L4T
+  cd $SCRIPT_DIR && bash $SCRIPT_DIR/patch.sh
+fi
+
+# Flash L4T
+cd $SCRIPT_DIR/Linux_for_Tegra
+sudo ./flash.sh jetson-tx2 mmcblk0p1

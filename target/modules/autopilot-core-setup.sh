@@ -10,13 +10,6 @@ export PATH=$PATH:$HOME/.local/bin
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
-mkdir -p workspace/autopilot-core && cd $_
-
-# Download projects
-git clone git@github.com:ApolloRobotics/tma-service-registry.git
-git clone git@github.com:ApolloRobotics/tma-gateway.git
-git clone git@github.com:ApolloRobotics/flight-stack.git
-
 # Install projects
 cd $HOME/workspace/autopilot-core/tma-service-registry && npm install
 cd $HOME/workspace/autopilot-core/tma-gateway && npm install
@@ -29,5 +22,3 @@ pip install -r requirements.txt
 echo "NODE_ENV=\"development\"
 CLOUD_URI=\"http://dev.flightservice.io\"
 VEHICLE_TYPE=\"multirotor\"" > $HOME/.env
-
-#TODO: setup pm2ls

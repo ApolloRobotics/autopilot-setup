@@ -1,0 +1,9 @@
+._*
+dump*
+*~
+.env
+*.swp
+.DS_Store
+
+*.tbz2
+repos/*

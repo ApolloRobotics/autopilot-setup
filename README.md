@@ -1,10 +1,13 @@
 # Autopilot Setup 
 
-## Install
-1. clone this repo into root user's home and cd into the directory
-2. `bash install.sh`
-3. (temporary) After a while you will be prompted: `Are you sure you want to continue connecting (yes/no)?` follow steps 4-5 then select yes
-3. (temporary) While the script is running, open a new window, log in as 'apollo' run: `ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa`
-4. (temporary) run `cat ~/.ssh/id_rsa.pub` copy the output and add it to github ssh keys
+## Prerequisites 
+1. Ubuntu 14.04 or later. 
+2. At least 28GB free disk space
+3. Tegra pluged into Host machine and in recovery mode. Check with `lsusb` if Nvidia shows up then it's good. 
+4. User must have access to the core autopilot repos and have their SSH key added to their github account. https://help.github.com/articles/connecting-to-github-with-ssh/
 
-Note: Steps 3-5 are necessary until the autopilot core repos are made public 
+## Note
+This repo is over 1gb in download size and could temporarily take up to 28GB of diskspace. 
+
+## Install
+1. `git clone git@github.com:ApolloRobotics/autopilot-setup.git autopilot-setup && cd $_ && bash install.sh`

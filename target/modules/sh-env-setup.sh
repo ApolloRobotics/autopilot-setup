@@ -1,3 +1,5 @@
+cd $HOME
+
 # Install Ultimate Bash (dev-only)
 cd ~ && git clone https://github.com/jakehewitt/bash-settings.git .bash-settings && make -C .bash-settings/ && source ~/.bashrc
 

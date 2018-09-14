@@ -1,4 +1,5 @@
 # Install redis dependancy 
+cd $HOME
 wget http://download.redis.io/releases/redis-stable.tar.gz
 tar -xf redis-stable.tar.gz
 rm redis-stable.tar.gz
