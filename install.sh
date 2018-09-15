@@ -9,41 +9,82 @@ else
   sudo true
 fi
 
+# Select the device type
+PS3='Please enter your choice: '
+options=("tx1" "tx2" "Quit")
+select opt in "${options[@]}"
+do
+    case $opt in
+        "${options[0]}")
+            device="${options[0]}"
+            break
+            ;;
+        "${options[1]}")
+            device="${options[1]}"
+            break;
+            ;;
+        "${options[2]}")
+            exit 0
+            break
+            ;;
+        *) echo "invalid option $REPLY";;
+    esac
+done
+
+echo "Flashing $device"
+
 # Define script location variables
 export SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export ROOTFS=Linux_for_Tegra/rootfs
+export L4T=$device/Linux_for_Tegra
 
 # Set up L4T and apply patches if it hasn't been done already
-if [ ! -d "Linux_for_Tegra" ]; then
+if [ ! -d "$device" ]; then
+  mkdir $device 
+fi 
+cd $device
 
+if [ ! -d "$L4T" ]; then
+
+  # Mirror for Nvidia files
   export FILE_SERVER="https://s3.us-east-2.amazonaws.com/apollorobotics-public/nvidia-files"
-  export ver="28.2.1"
-  export DRIVER_ARCHIVE="Tegra186_Linux_R${ver}_aarch64.tbz2"
-  export SAMPLE_ROOTFS="Tegra_Linux_Sample-Root-Filesystem_R${ver}_aarch64.tbz2"
+
+  # Device version
+  export tx1_version="24.2.3"
+  export tx2_version="28.2.1"
+  device_version=${device}_version
+
+  # Driver pack device suffix
+  export tx1_suffix="210"
+  export tx2_suffix="186"
+  device_suffix=${device}_suffix
+
+  # Computed file names for flashing files
+  export DRIVER_ARCHIVE="Tegra${!device_suffix}_Linux_R${!device_version}_aarch64.tbz2"
+  export SAMPLE_ROOTFS="Tegra_Linux_Sample-Root-Filesystem_R${!device_version}_aarch64.tbz2"
 
   # Download Nvidia flashing files
-  if [ ! -f $SCRIPT_DIR/$DRIVER_ARCHIVE ]; then
+  if [ ! -f $SCRIPT_DIR/$device/$DRIVER_ARCHIVE ]; then
       wget $FILE_SERVER/$DRIVER_ARCHIVE
   fi
-  if [ ! -f $SCRIPT_DIR/$SAMPLE_ROOTFS ]; then
+  if [ ! -f $SCRIPT_DIR/$device/$SAMPLE_ROOTFS ]; then
       wget $FILE_SERVER/$SAMPLE_ROOTFS
   fi
 
   # Unpack Drivers
-  tar xjvf $SCRIPT_DIR/$DRIVER_ARCHIVE
+  tar xjvf $SCRIPT_DIR/$device/$DRIVER_ARCHIVE --directory $SCRIPT_DIR/$device
 
   # Unpack sample filesystem
-  cp $SCRIPT_DIR/$SAMPLE_ROOTFS $SCRIPT_DIR/Linux_for_Tegra/rootfs && cd $_
-  sudo tar xjvf $SCRIPT_DIR/Linux_for_Tegra/rootfs/$SAMPLE_ROOTFS
-  rm $SCRIPT_DIR/Linux_for_Tegra/rootfs/$SAMPLE_ROOTFS
+  cp $SCRIPT_DIR/$device/$SAMPLE_ROOTFS $SCRIPT_DIR/$L4T/rootfs && cd $_
+  sudo tar xjvf $SCRIPT_DIR/$L4T/rootfs/$SAMPLE_ROOTFS 
+  rm $SCRIPT_DIR/$L4T/rootfs/$SAMPLE_ROOTFS
 
   # Install drivers to sample filesystem
-  sudo $SCRIPT_DIR/Linux_for_Tegra/apply_binaries.sh
+  sudo $SCRIPT_DIR/$L4T/apply_binaries.sh
 
   # Patch L4T
-  cd $SCRIPT_DIR && bash $SCRIPT_DIR/patch.sh
+  cd $SCRIPT_DIR && bash $SCRIPT_DIR/patch.sh $device
 fi
 
 # Flash L4T
-cd $SCRIPT_DIR/Linux_for_Tegra
-sudo ./flash.sh jetson-tx2 mmcblk0p1
+cd $SCRIPT_DIR/$L4T
+sudo ./flash.sh jetson-$device mmcblk0p1

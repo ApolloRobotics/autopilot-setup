@@ -1,6 +1,6 @@
 #!/bin/bash
 export SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export ROOTDIR=Linux_for_Tegra/rootfs
+export ROOTDIR=$1/Linux_for_Tegra/rootfs
 export INSTALLER_DIR=/root/autopilot-setup
 
 # Download projects
