@@ -43,7 +43,7 @@ if [ ! -d "$device" ]; then
 fi 
 cd $device
 
-if [ ! -d "$L4T" ]; then
+if [ ! -d "$SCRIPT_DIR/$L4T" ]; then
 
   # Mirror for Nvidia files
   export FILE_SERVER="https://s3.us-east-2.amazonaws.com/apollorobotics-public/nvidia-files"
@@ -87,4 +87,17 @@ fi
 
 # Flash L4T
 cd $SCRIPT_DIR/$L4T
-sudo ./flash.sh jetson-$device mmcblk0p1
+
+# Modifies line 503 of flash.sh to tell mkfs.ext4 to NOT use "64bit" or "metadata_csum"
+original_flash='mkfs -t $4 "${loop_dev}"'
+modified_flash='mkfs -t $4 -O ^metadata_csum,^64bit "${loop_dev}"'
+sed -i "s/$original_flash/$modified_flash/g" ./flash.sh
+
+# Start the flashing
+if [ "$device" == "tx1" ]; then
+  sudo ./flash.sh -S 14580MiB jetson-tx1 mmcblk0p1
+elif [ "$device" == "tx2" ]; then
+  sudo ./flash.sh -S 29318MiB jetson-tx2 mmcblk0p1
+else 
+  echo "Device $device not supported"
+fi

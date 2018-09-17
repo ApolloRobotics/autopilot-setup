@@ -7,3 +7,4 @@ dump*
 
 *.tbz2
 repos/*
+/tx*
