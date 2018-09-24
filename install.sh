@@ -31,6 +31,40 @@ do
     esac
 done
 
+# Select the connection type
+PS3='Please enter your choice: '
+options=("Ethernet" "WiFi" "Quit")
+select opt in "${options[@]}"
+do
+    case $opt in
+        "${options[0]}")
+            connection_type="${options[0]}"
+            break
+            ;;
+        "${options[1]}")
+            connection_type="${options[1]}"
+            break;
+            ;;
+        "${options[2]}")
+            exit 0
+            break
+            ;;
+        *) echo "invalid option $REPLY";;
+    esac
+done
+
+# Set up connection string
+if [ $connection_type = "Ethernet" ]; then
+  echo "Please ensure ethernet is connected to device"
+  read -p "Press enter to continue"
+elif [ $connection_type = "WiFi" ]; then
+  read -p "WiFI SSID (Case sensitive): " wifi_ssid
+  read -p "WiFI Password (Case sensitive): " wifi_password
+  sed -i "s/^connection_string=.*/connection_string=\"nmcli d wifi connect '$wifi_ssid' password '$wifi_password'\"/g" ./target/connect.sh
+else 
+  exit 1;
+fi
+
 echo "Flashing $device"
 
 # Define script location variables

@@ -1,19 +1,29 @@
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
 
-nmcli d wifi connect Xponential_EMP password "3DINC&W0rks"
+# Set Timezone to LA
+sudo timedatectl set-timezone America/Los_Angeles
 
-timeout=0
-while [ $(ifconfig | grep -F "192.168.1." | wc -l) -eq 0 ]; do
-    sleep 5
-    timeout=$((timeout+1))
-    nmcli d wifi connect Xponential_EMP password "3DINC&W0rks"
-    if [ "$timeout" -gt 60 ]; then
-        #Time out here
-        echo "install.sh connection timed out"
-        exit 1
-    fi
-done
-echo "Connected"
+# Create user account and required permissions
+export USER_NAME="apollo"
+adduser --disabled-password --gecos "" $USER_NAME
+usermod -a -G sudo,uucp,dialout,video $USER_NAME
+usermod -a -G uucp,dialout,video root
+echo "$USER_NAME:ElonMusk13"|chpasswd
+
+# SSH Hardening
+ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
+yes | sudo -H -u $USER_NAME bash -c 'ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa'
+cat /home/$USER_NAME/.ssh/id_rsa.pub
+cat $INSTALLER_DIR/authorized_keys >> /root/.ssh/authorized_keys
+cat $INSTALLER_DIR/authorized_keys >> /home/$USER_NAME/.ssh/authorized_keys
+sudo chown $USER_NAME:$USER_NAME /home/$USER_NAME/.ssh/authorized_keys
+sed -i 's/\<Port 22\>/Port 22022/g' /etc/ssh/sshd_config
+sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
+sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
+sudo service ssh restart
+
+# Wait for internet connection
+bash ./connect.sh
 
 # Update and install system dependancies 
 export DEBIAN_FRONTEND=noninteractive 

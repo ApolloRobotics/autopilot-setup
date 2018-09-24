@@ -11,3 +11,4 @@
 - Add our launcher shortcuts.
 - Don't auto-install sh-env-setup, make the dev dependencies an option.
 - Fix ROS alias shortcuts.
+- Have host install sript wait for device to come online and tail the log or https://unix.stackexchange.com/questions/338741/waiting-for-a-script-run-through-ssh-to-finish-before-moving-on-within-a-bash-sc
