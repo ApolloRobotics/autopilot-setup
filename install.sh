@@ -65,6 +65,16 @@ else
   exit 1;
 fi
 
+# Generate ssh key if one doesn't exist
+if [ ! -f $HOME/.ssh/id_rsa.pub ]; then
+    echo "ssh key not found! Creating..."
+    ssh-keygen -t rsa -N "" -f $HOME/.ssh/id_rsa
+fi
+
+# Add ssh key to authorized keys file if not present
+public_key=`cat $HOME/.ssh/id_rsa.pub`
+grep -q -F "$public_key" ./target/authorized_keys || echo "$public_key" >> ./target/authorized_keys
+
 echo "Flashing $device"
 
 # Define script location variables
