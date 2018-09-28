@@ -6,7 +6,7 @@ sudo timedatectl set-timezone America/Los_Angeles
 # Create user account and required permissions
 export USER_NAME="apollo"
 adduser --disabled-password --gecos "" $USER_NAME
-usermod -a -G sudo,uucp,dialout,video $USER_NAME
+usermod -a -G sudo,uucp,dialout,video,adm $USER_NAME
 usermod -a -G uucp,dialout,video root
 echo "$USER_NAME:ElonMusk13"|chpasswd
 
@@ -46,4 +46,5 @@ head -n -1 /etc/systemd/nvfb.sh > temp.sh ; mv temp.sh /etc/systemd/nvfb.sh
 # Make setup files executable
 find . -name '*.sh' -type f | xargs chmod +x
 
+echo "Rebooting, please wait. Install is still in progress"
 reboot
