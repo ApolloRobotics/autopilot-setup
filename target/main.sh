@@ -1,9 +1,11 @@
 #!/bin/bash
 
+# Define global vars
+export INSTALLER_DIR=/root/autopilot-setup
+
 # Fix path when run from cron
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
 
-export INSTALLER_DIR=/root/autopilot-setup
 
 # Helper function for running a script as a user, in their home directory.
 # Arg1: user
@@ -20,13 +22,6 @@ export DEBIAN_FRONTEND=noninteractive
 sudo apt-get update
 yes "yes" | apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
 
-# Turn user's screen lock off
-#sudo -H -u apollo bash -c 'gsettings set org.gnome.desktop.session idle-delay 0'
-
-# Change user's wallpaper
-mv $INSTALLER_DIR/wallpaper.png /home/$USER_NAME/Pictures/
-chown -R $USER_NAME:$USER_NAME /home/$USER_NAME/Pictures/
-#sudo -H -u apollo bash -c 'gsettings set org.gnome.desktop.background picture-uri file:///home/apollo/Pictures/wallpaper.png'
 
 # Remove automatic running of this file
 crontab -l | grep -v "@reboot sudo -H -u root bash -c 'cd $INSTALLER_DIR && bash $INSTALLER_DIR/main.sh >> /var/log/apollo-setup.log 2>&1'"  | crontab -
@@ -44,6 +39,10 @@ export COREDIR=/home/$USER_NAME/workspace/
 mkdir -p $COREDIR/autopilot-core
 mv $INSTALLER_DIR/repos/* $COREDIR/autopilot-core
 chown -R $USER_NAME:$USER_NAME $COREDIR
+
+# Add Apollo wallpaper to the default location
+mv $INSTALLER_DIR/wallpaper.png /usr/share/backgrounds
+chown -R $USER_NAME:$USER_NAME /usr/share/backgrounds
 
 # Install modules
 bash $INSTALLER_DIR/modules/ros-setup.sh $USER_NAME 
@@ -65,5 +64,6 @@ sudo userdel -rfRZ ubuntu
 sudo apt autoremove -y
 rm -rf /root/autopilot-setup
 
-echo "Completed installation"
+# This line must match the line in install.sh
+echo "Completed installation, rebooting device. You may now close this window"
 reboot
