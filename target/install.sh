@@ -1,4 +1,5 @@
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+export INSTALLER_DIR=/root/autopilot-setup
 
 # Set Timezone to LA
 sudo timedatectl set-timezone America/Los_Angeles
