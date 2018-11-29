@@ -94,7 +94,7 @@ if [ ! -d "$SCRIPT_DIR/$L4T" ]; then
   export FILE_SERVER="https://s3.us-east-2.amazonaws.com/apollorobotics-public/nvidia-files"
 
   # Device version
-  export tx1_version="24.2.3"
+  export tx1_version="28.2"
   export tx2_version="28.2.1"
   device_version=${device}_version
 

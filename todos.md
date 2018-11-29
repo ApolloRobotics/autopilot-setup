@@ -6,9 +6,13 @@
 - Stop if step fails
 - install.sh resume / skip uneeded parts
 - Clean/remove L4T patched files
+- Check for repo access via ssh-key. Exit if not.
+- If repo exists check repos for updates, else clone
+- Add LTE connection (MW01.VZWSTATIC)
 
 #### TODO for dev env (low-priority):
 - Remove locked launcher shortcuts. https://askubuntu.com/questions/409086/add-and-remove-launcher-icons-from-command-line
 - Add our launcher shortcuts.
 - Don't auto-install sh-env-setup, make the dev dependencies an option.
+- Stop wifi using internet (sudo nmcli con mod Xponential_EMP ipv4.never-default true)
 
