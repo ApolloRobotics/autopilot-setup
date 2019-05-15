@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Define global vars
+export USER_NAME="apollo"
 export INSTALLER_DIR=/root/autopilot-setup
 
 # Fix path when run from cron
