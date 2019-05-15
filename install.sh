@@ -151,16 +151,12 @@ if [ ! -d "$SCRIPT_DIR/$L4T" ]; then
 
   # Patch L4T
   cd $SCRIPT_DIR && bash $SCRIPT_DIR/patch.sh $device
+else 
+  echo "[INSTALL.SH] Nvidia files found. Using existing. Delete /${device} to clean."
 fi
 
 # Flash L4T
 cd $SCRIPT_DIR/$L4T
-
-# Modifies line 503 of flash.sh to tell mkfs.ext4 to NOT use "64bit" or "metadata_csum"
-echo "[INSTALL.SH] Modifying flash script"
-original_flash='mkfs -t $4 "${loop_dev}"'
-modified_flash='mkfs -t $4 -O ^metadata_csum,^64bit "${loop_dev}"'
-sed -i "s/$original_flash/$modified_flash/g" ./flash.sh
 
 # Start the flashing
 if [ "$device" == "tx1" ]; then
