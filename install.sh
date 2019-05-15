@@ -98,8 +98,8 @@ if [ ! -d "$SCRIPT_DIR/$L4T" ]; then
   export FILE_SERVER="https://s3.us-east-2.amazonaws.com/apollorobotics-public/nvidia-files"
 
   # Device version
-  export tx1_version="28.3.0"
-  export tx2_version="28.3.0"
+  export tx1_version="28.2.1"
+  export tx2_version="28.2.0"
   device_version=${device}_version
 
   # Driver pack device suffix
@@ -114,7 +114,7 @@ if [ ! -d "$SCRIPT_DIR/$L4T" ]; then
 
   # Computed file names for flashing files
   export DRIVER_ARCHIVE="Tegra${!device_suffix}_Linux_R${!device_version}_aarch64.tbz2"
-  export SAMPLE_ROOTFS="${device}-Tegra_Linux_Sample-Root-Filesystem_R${!device_version}_aarch64.tbz2"
+  export SAMPLE_ROOTFS="Tegra_Linux_Sample-Root-Filesystem_R${!device_version}_aarch64.tbz2"
 
   # Download Nvidia flashing files
   echo "[INSTALL.SH] Checking for drivers and sample rootfs"
