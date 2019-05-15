@@ -1,5 +1,4 @@
 # Install autopilot-core
-
 cd $HOME
 source $HOME/.bashrc
 
@@ -11,20 +10,26 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
 # Install projects
+echo "[TARGET/AUTOPILOT-CORE-SETUP.SH] Installing service registry"
 cd $HOME/workspace/autopilot-core/fos-service-registry && npm install
+echo "[TARGET/AUTOPILOT-CORE-SETUP.SH] Installing api gateway"
 cd $HOME/workspace/autopilot-core/fos-gateway && npm install
+echo "[TARGET/AUTOPILOT-CORE-SETUP.SH] Installing status checks"
 cd $HOME/workspace/autopilot-core/fos-status-checks && npm install
+echo "[TARGET/AUTOPILOT-CORE-SETUP.SH] Installing flight stack"
 cd $HOME/workspace/autopilot-core/fos-flight-stack 
 virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
 # Set environment variables
+echo "[TARGET/AUTOPILOT-CORE-SETUP.SH] Creating .env"
 echo "NODE_ENV=\"development\"
-CLOUD_URI=\"http://dev.flightservice.io\"
+CLOUD_URI=\"http://api.flightservice.io\"
 VEHICLE_TYPE=\"multirotor\"" > $HOME/.env
 
 # Set up PM2
+echo "[TARGET/AUTOPILOT-CORE-SETUP.SH] Setting up PM2"
 cd $HOME/workspace/autopilot-core
 pm2 start $HOME/workspace/autopilot-core/fos-service-registry/index.js --name registry
 pm2 start $HOME/workspace/autopilot-core/fos-gateway/index.js --name gateway

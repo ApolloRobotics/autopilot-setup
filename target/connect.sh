@@ -13,6 +13,7 @@ test_connection() {
 
 timeout=0
 until test_connection; do
+    echo "[TARGET/CONNECT.SH] Waiting for internet connection..."
     sleep 5
     timeout=$((timeout+1))
     eval "$connection_string"
