@@ -66,6 +66,7 @@ else
 fi
 
 # Generate ssh key if one doesn't exist
+echo "[INSTALL.SH] Checking for ssh key"
 if [ ! -f $HOME/.ssh/id_rsa.pub ]; then
     echo "ssh key not found! Creating..."
     ssh-keygen -t rsa -N "" -f $HOME/.ssh/id_rsa
@@ -75,6 +76,7 @@ if [ ! -f $HOME/.ssh/id_rsa.pub ]; then
 fi
 
 # Add ssh key to authorized keys file if not present
+echo "[INSTALL.SH] Adding your ssh key to target device"
 public_key=`cat $HOME/.ssh/id_rsa.pub`
 grep -q -F "$public_key" ./target/authorized_keys || echo "$public_key" >> ./target/authorized_keys
 
@@ -83,11 +85,13 @@ export SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export L4T=$device/Linux_for_Tegra
 
 # Set up L4T and apply patches if it hasn't been done already
+echo "[INSTALL.SH] Checking for existing nvidia files"
 if [ ! -d "$device" ]; then
   mkdir $device 
 fi 
 cd $device
 
+echo "[INSTALL.SH] Checking for extracted nvidia files"
 if [ ! -d "$SCRIPT_DIR/$L4T" ]; then
 
   # Mirror for Nvidia files
@@ -113,25 +117,32 @@ if [ ! -d "$SCRIPT_DIR/$L4T" ]; then
   export SAMPLE_ROOTFS="${device}-Tegra_Linux_Sample-Root-Filesystem_R${!device_version}_aarch64.tbz2"
 
   # Download Nvidia flashing files
+  echo "[INSTALL.SH] Checking for drivers and sample rootfs"
   if [ ! -f $SCRIPT_DIR/$device/$DRIVER_ARCHIVE ]; then
+      echo "[INSTALL.SH] Drivers not found. Downloading"
       wget $FILE_SERVER/$DRIVER_ARCHIVE
   fi
   if [ ! -f $SCRIPT_DIR/$device/$SAMPLE_ROOTFS ]; then
+      echo "[INSTALL.SH] Rootfs not found. Downloading"
       wget $FILE_SERVER/$SAMPLE_ROOTFS
   fi
 
   # Unpack Drivers
+  echo "[INSTALL.SH] Extracting drivers"
   tar xjvf $SCRIPT_DIR/$device/$DRIVER_ARCHIVE --directory $SCRIPT_DIR/$device
 
   # Unpack sample filesystem
+  echo "[INSTALL.SH] Extracting rootfs"
   cp $SCRIPT_DIR/$device/$SAMPLE_ROOTFS $SCRIPT_DIR/$L4T/rootfs && cd $_
   sudo tar xjvf $SCRIPT_DIR/$L4T/rootfs/$SAMPLE_ROOTFS 
   rm $SCRIPT_DIR/$L4T/rootfs/$SAMPLE_ROOTFS
 
   # Install drivers to sample filesystem
+  echo "[INSTALL.SH] Installing drivers"
   sudo $SCRIPT_DIR/$L4T/apply_binaries.sh
 
   # Install ConnectTech BSP
+  echo "[INSTALL.SH] Installing ConnectTech BSP"
   cd $SCRIPT_DIR/$L4T
   wget ${!device_bsp}
   tar -xzf $(basename "${!device_bsp}")
@@ -146,14 +157,17 @@ fi
 cd $SCRIPT_DIR/$L4T
 
 # Modifies line 503 of flash.sh to tell mkfs.ext4 to NOT use "64bit" or "metadata_csum"
+echo "[INSTALL.SH] Modifying flash script"
 original_flash='mkfs -t $4 "${loop_dev}"'
 modified_flash='mkfs -t $4 -O ^metadata_csum,^64bit "${loop_dev}"'
 sed -i "s/$original_flash/$modified_flash/g" ./flash.sh
 
 # Start the flashing
 if [ "$device" == "tx1" ]; then
+  echo "[INSTALL.SH] Flashing tx1"
   sudo ./flash.sh -S 14580MiB jetson-tx1 mmcblk0p1
 elif [ "$device" == "tx2" ]; then
+  echo "[INSTALL.SH] Flashing tx2"
   sudo ./flash.sh orbitty mmcblk0p1
 else 
   echo "Device $device not supported"
