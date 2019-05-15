@@ -1,19 +1,19 @@
 {
   "apps" : [{
     "name"        : "registry",
-    "script"      : "$HOME/workspace/autopilot-core/tma-service-registry/index.js",
+    "script"      : "$HOME/workspace/autopilot-core/fos-service-registry/index.js",
     "watch"       : false,
   },{
     "name"        : "gateway",
-    "script"      : "$HOME/workspace/autopilot-core/tma-gateway/index.js",
+    "script"      : "$HOME/workspace/autopilot-core/fos-gateway/index.js",
     "watch"       : false,
   },{
     "name"        : "mavproxy",
-    "script"      : "$HOME/workspace/autopilot-core/flight-stack/mavproxy_start.sh",
+    "script"      : "$HOME/workspace/autopilot-core/fos-flight-stack/mavproxy_start.sh",
     "watch"       : false,
   },{
     "name"        : "flight-stack",
-    "script"      : "$HOME/workspace/autopilot-core/flight-stack/start.sh",
+    "script"      : "$HOME/workspace/autopilot-core/fos-flight-stack/start.sh",
     "watch"       : false,
   }]
 }

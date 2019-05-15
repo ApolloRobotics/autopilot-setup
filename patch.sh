@@ -4,9 +4,10 @@ export ROOTDIR=$1/Linux_for_Tegra/rootfs
 export INSTALLER_DIR=/root/autopilot-setup
 
 # Download projects
-git clone --depth=1 git@github.com:ApolloRobotics/tma-service-registry.git $SCRIPT_DIR/repos/tma-service-registry && rm -rf $_/.git
-git clone --depth=1 git@github.com:ApolloRobotics/tma-gateway.git $SCRIPT_DIR/repos/tma-gateway && rm -rf $_/.git
-git clone --depth=1 git@github.com:ApolloRobotics/flight-stack.git $SCRIPT_DIR/repos/flight-stack && rm -rf $_/.git
+git clone --depth=1 git@gitlab.com:apollorobotics/fos/fos-service-registry.git $SCRIPT_DIR/repos/fos-service-registry && rm -rf $_/.git
+git clone --depth=1 git@gitlab.com:apollorobotics/fos/fos-gateway.git $SCRIPT_DIR/repos/fos-gateway && rm -rf $_/.git
+git clone --depth=1 git@gitlab.com:apollorobotics/fos/fos-status-checks.git $SCRIPT_DIR/repos/fos-status-checks && rm -rf $_/.git
+git clone --depth=1 git@gitlab.com:apollorobotics/fos/fos-flight-stack.git $SCRIPT_DIR/repos/fos-flight-stack && rm -rf $_/.git
 
 # Copy projects to the sample root filesystem
 sudo mkdir -p $ROOTDIR/$INSTALLER_DIR/

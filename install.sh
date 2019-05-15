@@ -94,8 +94,8 @@ if [ ! -d "$SCRIPT_DIR/$L4T" ]; then
   export FILE_SERVER="https://s3.us-east-2.amazonaws.com/apollorobotics-public/nvidia-files"
 
   # Device version
-  export tx1_version="28.2"
-  export tx2_version="28.2.1"
+  export tx1_version="28.3"
+  export tx2_version="28.3"
   device_version=${device}_version
 
   # Driver pack device suffix
@@ -104,13 +104,13 @@ if [ ! -d "$SCRIPT_DIR/$L4T" ]; then
   device_suffix=${device}_suffix
 
   # ConnectTech BSP
-  export tx1_bsp="http://www.connecttech.com/ftp/Drivers/CTI-L4T-V020.tgz"
-  export tx2_bsp="http://www.connecttech.com/ftp/Drivers/CTI-L4T-V120.tgz"
+  export tx1_bsp="https://s3.us-east-2.amazonaws.com/apollorobotics-public/nvidia-files/CTI-L4T-V020.tgz"
+  export tx2_bsp="https://s3.us-east-2.amazonaws.com/apollorobotics-public/nvidia-files/CTI-L4T-V121.tgz"
   device_bsp=${device}_bsp
 
   # Computed file names for flashing files
   export DRIVER_ARCHIVE="Tegra${!device_suffix}_Linux_R${!device_version}_aarch64.tbz2"
-  export SAMPLE_ROOTFS="Tegra_Linux_Sample-Root-Filesystem_R${!device_version}_aarch64.tbz2"
+  export SAMPLE_ROOTFS="${device}-Tegra_Linux_Sample-Root-Filesystem_R${!device_version}_aarch64.tbz2"
 
   # Download Nvidia flashing files
   if [ ! -f $SCRIPT_DIR/$device/$DRIVER_ARCHIVE ]; then
