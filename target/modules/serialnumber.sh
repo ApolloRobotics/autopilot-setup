@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Saves the serial number of the tegra to a file in the user home directory.
-echo -e "\033[41m[TARGET/SERIALNUMBER-SETUP.SH] Adding serialnumber to home folder and bashrc\033[0m"
+echo -e "\033[42m[TARGET/SERIALNUMBER-SETUP.SH] Adding serialnumber to home folder and bashrc\033[0m"
 set -- $(cat /proc/cmdline)
 for x in "$@"; do
     case "$x" in

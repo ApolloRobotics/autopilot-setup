@@ -66,7 +66,7 @@ else
 fi
 
 # Generate ssh key if one doesn't exist
-echo -e "\033[41m[INSTALL.SH] Checking for ssh key\033[0m"
+echo -e "\033[42m[INSTALL.SH] Checking for ssh key\033[0m"
 if [ ! -f $HOME/.ssh/id_rsa.pub ]; then
     echo "ssh key not found! Creating..."
     ssh-keygen -t rsa -N "" -f $HOME/.ssh/id_rsa
@@ -76,7 +76,7 @@ if [ ! -f $HOME/.ssh/id_rsa.pub ]; then
 fi
 
 # Add ssh key to authorized keys file if not present
-echo -e "\033[41m[INSTALL.SH] Adding your ssh key to target device\033[0m"
+echo -e "\033[42m[INSTALL.SH] Adding your ssh key to target device\033[0m"
 public_key=`cat $HOME/.ssh/id_rsa.pub`
 grep -q -F "$public_key" ./target/authorized_keys || echo "$public_key" >> ./target/authorized_keys
 
@@ -85,13 +85,13 @@ export SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export L4T=$device/Linux_for_Tegra
 
 # Set up L4T and apply patches if it hasn't been done already
-echo -e "\033[41m[INSTALL.SH] Checking for existing nvidia files\033[0m"
+echo -e "\033[42m[INSTALL.SH] Checking for existing nvidia files\033[0m"
 if [ ! -d "$device" ]; then
   mkdir $device 
 fi 
 cd $device
 
-echo -e "\033[41m[INSTALL.SH] Checking for extracted nvidia files\033[0m"
+echo -e "\033[42m[INSTALL.SH] Checking for extracted nvidia files\033[0m"
 if [ ! -d "$SCRIPT_DIR/$L4T" ]; then
 
   # Mirror for Nvidia files
@@ -117,32 +117,32 @@ if [ ! -d "$SCRIPT_DIR/$L4T" ]; then
   export SAMPLE_ROOTFS="Tegra_Linux_Sample-Root-Filesystem_R${!device_version}_aarch64.tbz2"
 
   # Download Nvidia flashing files
-  echo -e "\033[41m[INSTALL.SH] Checking for drivers and sample rootfs\033[0m"
+  echo -e "\033[42m[INSTALL.SH] Checking for drivers and sample rootfs\033[0m"
   if [ ! -f $SCRIPT_DIR/$device/$DRIVER_ARCHIVE ]; then
-      echo -e "\033[41m[INSTALL.SH] Drivers not found. Downloading\033[0m"
+      echo -e "\033[42m[INSTALL.SH] Drivers not found. Downloading\033[0m"
       wget $FILE_SERVER/$DRIVER_ARCHIVE
   fi
   if [ ! -f $SCRIPT_DIR/$device/$SAMPLE_ROOTFS ]; then
-      echo -e "\033[41m[INSTALL.SH] Rootfs not found. Downloading\033[0m"
+      echo -e "\033[42m[INSTALL.SH] Rootfs not found. Downloading\033[0m"
       wget $FILE_SERVER/$SAMPLE_ROOTFS
   fi
 
   # Unpack Drivers
-  echo -e "\033[41m[INSTALL.SH] Extracting drivers\033[0m"
+  echo -e "\033[42m[INSTALL.SH] Extracting drivers\033[0m"
   tar xjvf $SCRIPT_DIR/$device/$DRIVER_ARCHIVE --directory $SCRIPT_DIR/$device
 
   # Unpack sample filesystem
-  echo -e "\033[41m[INSTALL.SH] Extracting rootfs\033[0m"
+  echo -e "\033[42m[INSTALL.SH] Extracting rootfs\033[0m"
   cp $SCRIPT_DIR/$device/$SAMPLE_ROOTFS $SCRIPT_DIR/$L4T/rootfs && cd $_
   sudo tar xjvf $SCRIPT_DIR/$L4T/rootfs/$SAMPLE_ROOTFS 
   rm $SCRIPT_DIR/$L4T/rootfs/$SAMPLE_ROOTFS
 
   # Install drivers to sample filesystem
-  echo -e "\033[41m[INSTALL.SH] Installing drivers\033[0m"
+  echo -e "\033[42m[INSTALL.SH] Installing drivers\033[0m"
   sudo $SCRIPT_DIR/$L4T/apply_binaries.sh
 
   # Install ConnectTech BSP
-  echo -e "\033[41m[INSTALL.SH] Installing ConnectTech BSP\033[0m"
+  echo -e "\033[42m[INSTALL.SH] Installing ConnectTech BSP\033[0m"
   cd $SCRIPT_DIR/$L4T
   wget ${!device_bsp}
   tar -xzf $(basename "${!device_bsp}")
@@ -152,7 +152,7 @@ if [ ! -d "$SCRIPT_DIR/$L4T" ]; then
   # Patch L4T
   cd $SCRIPT_DIR && bash $SCRIPT_DIR/patch.sh $device
 else 
-  echo -e "\033[41m[INSTALL.SH] Nvidia files found. Using existing. Delete /${device} to clean.\033[0m"
+  echo -e "\033[42m[INSTALL.SH] Nvidia files found. Using existing. Delete /${device} to clean.\033[0m"
 fi
 
 # Flash L4T
@@ -160,10 +160,10 @@ cd $SCRIPT_DIR/$L4T
 
 # Start the flashing
 if [ "$device" == "tx1" ]; then
-  echo -e "\033[41m[INSTALL.SH] Flashing tx1\033[0m"
+  echo -e "\033[42m[INSTALL.SH] Flashing tx1\033[0m"
   sudo ./flash.sh -S 14580MiB jetson-tx1 mmcblk0p1
 elif [ "$device" == "tx2" ]; then
-  echo -e "\033[41m[INSTALL.SH] Flashing tx2\033[0m"
+  echo -e "\033[42m[INSTALL.SH] Flashing tx2\033[0m"
   sudo ./flash.sh orbitty mmcblk0p1
 else 
   echo "Device $device not supported"
