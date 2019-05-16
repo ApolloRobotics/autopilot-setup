@@ -70,7 +70,7 @@ echo -e "\033[41m[INSTALL.SH] Checking for ssh key\n\033[0m"
 if [ ! -f $HOME/.ssh/id_rsa.pub ]; then
     echo "ssh key not found! Creating..."
     ssh-keygen -t rsa -N "" -f $HOME/.ssh/id_rsa
-    echo Add the following ssh-key to your github setting and re-run:
+    echo "Add the following ssh-key to your github setting and re-run:"
     cat $HOME/.ssh/id_rsa.pub
     exit 0
 fi
@@ -98,8 +98,8 @@ if [ ! -d "$SCRIPT_DIR/$L4T" ]; then
   export FILE_SERVER="https://s3.us-east-2.amazonaws.com/apollorobotics-public/nvidia-files"
 
   # Device version
-  export tx1_version="28.2.1"
-  export tx2_version="28.2.0"
+  export tx1_version="28.2.0"
+  export tx2_version="28.2.1"
   device_version=${device}_version
 
   # Driver pack device suffix
