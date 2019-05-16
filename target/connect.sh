@@ -13,7 +13,7 @@ test_connection() {
 
 timeout=0
 until test_connection; do
-    echo -e "\033[41m[TARGET/CONNECT.SH] Waiting for internet connection...\n\033[0m"
+    echo -e "\033[41m[TARGET/CONNECT.SH] Waiting for internet connection...\033[0m"
     sleep 5
     timeout=$((timeout+1))
     eval "$connection_string"
