@@ -37,6 +37,14 @@ mv sources.list /etc/apt/
 sudo apt-get update
 yes "yes" | apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
 
+# Update cmake
+git clone --depth=1 https://github.com/Kitware/CMake.git
+cd CMake
+./bootstrap
+make 
+sudo make install
+rm -rf CMake
+
 # Run the main script on reboot
 # Create cron job non-iteractively (also without risk of duplication)
 # https://stackoverflow.com/questions/878600/how-to-create-a-cron-job-using-bash-automatically-without-the-interactive-editor

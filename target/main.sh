@@ -42,12 +42,36 @@ sudo apt-get install -yq libxml2-dev libxslt1-dev libgtk2.0-dev pkg-config libav
 sudo apt-get build-dep python3-lxml
 # For node to run on port 80
 sudo apt-get install libcap2-bin
+# libLAS dependancy
+sudo apt-get install libgeotiff-dev
+
+# Install Crow
+sudo apt-get install libtcmalloc-minimal4
+sudo ln -s /usr/lib/libtcmalloc_minimal.so.4 /usr/lib/libtcmalloc_minimal.so
+git clone --depth=1 https://github.com/ipkn/crow.git
+mkdir -p crow/build && cd $_
+cmake .. && make
+sudo cp -r $HOME/crow/include/* /usr/include/
+cd $HOME && rm -rf crow
+
+# Install LibLAS
+wget -O libLAS.tar.bz2 http://download.osgeo.org/liblas/libLAS-1.8.1.tar.bz2
+tar xvfj libLAS-*
+cd libLAS-*
+export LDFLAGS="${LDFLAGS} -pthread"
+mkdir build && cd $_
+cmake .. && make && sudo make install
+cd $HOME && rm -rf libLAS-*
+
+#MAVros 
+sudo apt-get install ros-kinetic-mavros ros-kinetic-mavros-extras
 
 # Move required files for autopilot-core to user
 echo -e "\033[42m[TARGET/MAIN.SH] Moving fos files into user workspace\033[0m"
 export COREDIR=/home/$USER_NAME/workspace/
 mkdir -p $COREDIR/autopilot-core
-mv $INSTALLER_DIR/repos/* $COREDIR/autopilot-core
+mv $INSTALLER_DIR/repos/* $COREDIR/
+mv $COREDIR/fos-* $COREDIR/autopilot-core
 chown -R $USER_NAME:$USER_NAME $COREDIR
 
 # Add Apollo wallpaper to the default location
@@ -62,6 +86,7 @@ run_script_as root $INSTALLER_DIR/modules/redis-setup.sh
 run_script_as $USER_NAME $INSTALLER_DIR/modules/python-setup.sh
 run_script_as $USER_NAME $INSTALLER_DIR/modules/node-setup.sh
 run_script_as $USER_NAME $INSTALLER_DIR/modules/ouster-setup.sh
+run_script_as $USER_NAME $INSTALLER_DIR/modules/loam-setup.sh
 run_script_as $USER_NAME $INSTALLER_DIR/modules/serialnumber.sh
 run_script_as $USER_NAME $INSTALLER_DIR/modules/autopilot-core-setup.sh
 # dev env only

@@ -9,6 +9,7 @@ git clone --depth=1 git@gitlab.com:apollorobotics/fos/fos-service-registry.git $
 git clone --depth=1 git@gitlab.com:apollorobotics/fos/fos-gateway.git $SCRIPT_DIR/repos/fos-gateway && rm -rf $_/.git
 git clone --depth=1 git@gitlab.com:apollorobotics/fos/fos-status-checks.git $SCRIPT_DIR/repos/fos-status-checks && rm -rf $_/.git
 git clone --depth=1 git@gitlab.com:apollorobotics/fos/fos-flight-stack.git $SCRIPT_DIR/repos/fos-flight-stack && rm -rf $_/.git
+git clone --depth=1 git@github.com:ApolloRobotics/loam_ros.git $SCRIPT_DIR/repos/loam_ros.git && rm -rf $_/.git
 
 # Copy projects to the sample root filesystem
 echo -e "\033[42m[PATCH.SH] Moving repos to sample rootfs\033[0m"
