@@ -37,7 +37,11 @@ sudo apt-get install -y curl screen python-dev build-essential cmake git vim dns
 #TODO: Verify Note: I did not install any of these on the TX2 and it seems to be working just fine.
 #sudo apt-get install -yq ppp sshpass 
 #TODO: Verify Note: I did not install any of these on the TX2 and it seems to be working just fine.
-#sudo apt-get install -yq libxml2-dev libxslt1-dev libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libusb-1.0-0-dev libswscale-dev python-numpy libtbb2 libtbb-dev libpng-dev libjpeg-dev libtiff-dev libjasper-dev libdc1394-22-dev python-gst0.10 icecast2
+sudo apt-get install -yq libxml2-dev libxslt1-dev libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libusb-1.0-0-dev libswscale-dev python-numpy 
+#libtbb2 libtbb-dev libpng-dev libjpeg-dev libtiff-dev libjasper-dev libdc1394-22-dev python-gst0.10 icecast2
+sudo apt-get build-dep python3-lxml
+# For node to run on port 80
+sudo apt-get install libcap2-bin
 
 # Move required files for autopilot-core to user
 echo -e "\033[42m[TARGET/MAIN.SH] Moving fos files into user workspace\033[0m"
@@ -63,6 +67,10 @@ run_script_as $USER_NAME $INSTALLER_DIR/modules/autopilot-core-setup.sh
 # dev env only
 run_script_as $USER_NAME $INSTALLER_DIR/modules/sh-env-setup.sh
 sudo apt install -y terminator
+
+# Enable node to run on port 80
+NODE_VERSION=$(sudo -H -i -u apollo bash -c 'which node')
+sudo setcap cap_net_bind_service=+ep $NODE_VERSION
 
 # Remove default user accounts
 echo -e "\033[42m[TARGET/MAIN.SH] Removing nvidia and ubuntu users\033[0m"
