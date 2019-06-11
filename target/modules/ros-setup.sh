@@ -5,6 +5,7 @@ sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C
 sudo apt-get update
 sudo apt-get install -y ros-kinetic-desktop-full
 sudo apt-get install -y python-rosinstall python-rosinstall-generator python-wstool build-essential
+sudo apt install ros-kinetic-pcl-ros ros-kinetic-tf2-geometry-msgs ros-kinetic-rviz ros-kinetic-rosbash 
 sudo rosdep init
 
 # Finish ROS install

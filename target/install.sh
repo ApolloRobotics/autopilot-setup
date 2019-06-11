@@ -38,10 +38,11 @@ sudo apt-get update
 yes "yes" | apt-get -qy -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
 
 # Update cmake
+echo -e "\033[42m[TARGET/INSTALL.SH] Update CMake\033[0m"
 git clone --depth=1 https://github.com/Kitware/CMake.git
 cd CMake
 ./bootstrap
-make 
+make -j4
 sudo make install
 rm -rf CMake
 

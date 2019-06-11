@@ -42,29 +42,33 @@ sudo apt-get install -yq libxml2-dev libxslt1-dev libgtk2.0-dev pkg-config libav
 sudo apt-get build-dep python3-lxml
 # For node to run on port 80
 sudo apt-get install libcap2-bin
+# Install PCL for loam_ros
+sudo apt-get install libpcl-dev 
 # libLAS dependancy
 sudo apt-get install libgeotiff-dev
+# Enable exfat usb devices
+sudo apt-get install exfat-utils exfat-fuse
 
 # Install Crow
-sudo apt-get install libtcmalloc-minimal4
+echo -e "\033[42m[TARGET/MAIN.SH] Installing crow\033[0m"
+sudo apt-get install libtcmalloc-minimal4 
+sudo apt-get install libssl-dev libboost-all-dev # Didn't require these the first time...
 sudo ln -s /usr/lib/libtcmalloc_minimal.so.4 /usr/lib/libtcmalloc_minimal.so
 git clone --depth=1 https://github.com/ipkn/crow.git
 mkdir -p crow/build && cd $_
-cmake .. && make
+cmake .. && make -j
 sudo cp -r $HOME/crow/include/* /usr/include/
 cd $HOME && rm -rf crow
 
 # Install LibLAS
-wget -O libLAS.tar.bz2 http://download.osgeo.org/liblas/libLAS-1.8.1.tar.bz2
+echo -e "\033[42m[TARGET/MAIN.SH] Installing libLAS\033[0m"
+wget http://download.osgeo.org/liblas/libLAS-1.8.1.tar.bz2
 tar xvfj libLAS-*
 cd libLAS-*
 export LDFLAGS="${LDFLAGS} -pthread"
 mkdir build && cd $_
-cmake .. && make && sudo make install
+cmake .. && make -j4 && sudo make install
 cd $HOME && rm -rf libLAS-*
-
-#MAVros 
-sudo apt-get install ros-kinetic-mavros ros-kinetic-mavros-extras
 
 # Move required files for autopilot-core to user
 echo -e "\033[42m[TARGET/MAIN.SH] Moving fos files into user workspace\033[0m"
@@ -99,8 +103,8 @@ sudo setcap cap_net_bind_service=+ep $NODE_VERSION
 
 # Remove default user accounts
 echo -e "\033[42m[TARGET/MAIN.SH] Removing nvidia and ubuntu users\033[0m"
-sudo userdel -rfRZ nvidia
-sudo userdel -rfRZ ubuntu
+# sudo userdel -rfRZ nvidia
+# sudo userdel -rfRZ ubuntu
 
 # Clean up
 echo -e "\033[42m[TARGET/MAIN.SH] CLeaning up install files\033[0m"

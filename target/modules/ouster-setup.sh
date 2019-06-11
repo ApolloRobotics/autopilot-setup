@@ -45,5 +45,5 @@ save_os1_hostname() {
   os1_hostname=$(sudo journalctl -u dnsmasq | grep -o "os1-[a-zA-Z0-9]*") 
   echo "export OS1_HOSTNAME=\"$os1_hostname\"" >> $HOME/.bashrc 
 } 
-if [ -z ${OS1_HOSTNAME+x} ]; then echo "\n WARNING: OS1 Hostname not stored. Please boot with the LiDAR connected and run save_os1_hostname"; fi
+if [ -z ${OS1_HOSTNAME+x} ]; then echo -e "\033[41m\nWARNING: OS1 Hostname not stored. Please boot with the LiDAR connected and run save_os1_hostname\033[0m"; fi
 ' >> $HOME/.bashrc 
