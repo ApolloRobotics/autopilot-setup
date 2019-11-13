@@ -1,0 +1,6 @@
+# /etc/fstab: static file system information.
+#
+# <file system> <mount point>             <type>          <options>                               <dump> <pass>
+/dev/root       /                         rootfs          defaults                                     0 1
+/dev/mmcblk1p1  /media/apollo/disk        ext4            defaults,user,nofail                         0 1
+/dev/sda1	      /media/apollo/DATA        exfat           defaults,user,nofail,umask=0000              0 1
