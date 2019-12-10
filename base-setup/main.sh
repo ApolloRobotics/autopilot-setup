@@ -14,10 +14,6 @@ source ../lib/run_as.sh
 # Fix path when run from cron
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
 
-# Add fstab entry for USB automounting
-debug "Setting up fstab"
-mv $INSTALLER_DIR/base-setup/fstab /etc/fstab
-
 # Wait for internet connection
 debug "Waiting for internet connection..."
 wait_for_connection
@@ -45,6 +41,19 @@ sudo apt-get install -yq libpcl-dev
 sudo apt-get install -yq libgeotiff-dev
 # Enable exfat usb devices
 sudo apt-get install -yq exfat-utils exfat-fuse
+
+# Add fstab entry for USB automounting
+debug "Setting up fstab"
+mv $INSTALLER_DIR/base-setup/fstab /etc/fstab
+
+# Configure dnsmasq
+echo -e "\033[42mConfiguring dnsmasq\033[0m"
+sudo sh -c "echo 'interface=eth0\ndhcp-range=10.5.5.50,10.5.5.100,12h' > /etc/dnsmasq.conf"
+# Make dnsmasq wait for network online. Can wait for a specific device too https://bugs.launchpad.net/ubuntu/+source/dnsmasq/+bug/1531184
+sudo sed -i '/\[Install\]/i Restart=on-failure' /lib/systemd/system/dnsmasq.service
+sudo sed -i '/\[Install\]/i RestartSec=5\n' /lib/systemd/system/dnsmasq.service
+sudo systemctl enable dnsmasq
+sudo systemctl daemon-reload
 
 # Install Crow (Flask for C++)
 debug "Installing crow"

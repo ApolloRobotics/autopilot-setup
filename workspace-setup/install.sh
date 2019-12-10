@@ -31,27 +31,17 @@ cd $HOME/workspace
 git clone --depth=1 https://github.com/ouster-lidar/ouster_example.git
 ln -s $HOME/workspace/ouster_example/ $HOME/workspace/catkin_ws/src
 
-# Setup InertialSenese
-debug "Downloading InertialSense"
+# Setup APX ROS
+debug "Downloading Loam APX"
 cd $HOME/workspace
-git clone --depth=1 https://github.com/inertialsense/inertial_sense_ros.git
-cd inertial_sense_ros
-git submodule update --init --recursive
-ln -s $HOME/workspace/inertial_sense_ros/ $HOME/workspace/catkin_ws/src
+git clone --depth=1 git@github.com:/ApolloRobotics/apx_ros.git
+ln -s $HOME/workspace/apx_ros $HOME/workspace/catkin_ws/src/
 
-# Setup Loam ROS
-debug "Downloading Loam ROS"
-cd $HOME/workspace
-git clone --depth=1 git@github.com:/ApolloRobotics/loam_ros.git
-ln -s $HOME/workspace/loam_ros/loam_interface $HOME/workspace/catkin_ws/src/
-ln -s $HOME/workspace/loam_ros/loam_graph $HOME/workspace/catkin_ws/src/
-
-# Setup NDT
-debug "Building NDT"
-cd $HOME/workspace/loam_ros/cuda_dev/ndt_gpu
-rm -rf build
+# make the processing application 
+debug "Making processing application"
+cd $HOME/workspace/apx_ros/process
 mkdir build && cd $_
-cmake .. && make -j4
+cmake .. && make
 
 # Make all the projects
 debug "Building all projects" 

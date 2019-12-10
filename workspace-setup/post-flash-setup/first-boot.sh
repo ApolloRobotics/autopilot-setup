@@ -12,15 +12,6 @@ sudo nmcli c delete "Wired connection 1"
 sudo nmcli con add type ethernet con-name lidar ifname eth0 ip4 10.5.5.1/24 
 nmcli con modify lidar ipv4.never-default true
 
-# Configure dnsmasq
-echo -e "\033[42mConfiguring dnsmasq\033[0m"
-sudo sh -c "echo 'interface=eth0\ndhcp-range=10.5.5.50,10.5.5.100,12h' > /etc/dnsmasq.conf"
-# Make dnsmasq wait for network online. Can wait for a specific device too https://bugs.launchpad.net/ubuntu/+source/dnsmasq/+bug/1531184
-sudo sed -i '/\[Install\]/i Restart=on-failure' /lib/systemd/system/dnsmasq.service
-sudo sed -i '/\[Install\]/i RestartSec=5\n' /lib/systemd/system/dnsmasq.service
-sudo systemctl enable dnsmasq
-sudo systemctl daemon-reload
-
 # Function to Add OS1 Hostname to .bashrc. Could be simplified and automated 
 echo -e "\033[42mAdding hostname to bashrc\033[0m"
 echo '
