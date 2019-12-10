@@ -14,7 +14,7 @@ source ../lib/run_as.sh
 # Fix path when run from cron
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
 
-# Add Apollo wallpaper to the default location
+# Add fstab entry for USB automounting
 debug "Setting up fstab"
 mv $INSTALLER_DIR/base-setup/fstab /etc/fstab
 
@@ -46,7 +46,7 @@ sudo apt-get install -yq libgeotiff-dev
 # Enable exfat usb devices
 sudo apt-get install -yq exfat-utils exfat-fuse
 
-# Install Crow
+# Install Crow (Flask for C++)
 debug "Installing crow"
 cd $HOME
 sudo apt-get install libtcmalloc-minimal4 
@@ -58,7 +58,7 @@ cmake .. && make -j4
 sudo cp -r $HOME/crow/include/* /usr/include/
 cd $HOME && rm -rf crow
 
-# Install LibLAS
+# Install LibLAS (LAS File generator library)
 debug "Installing libLAS"
 wget http://download.osgeo.org/liblas/libLAS-1.8.1.tar.bz2
 tar xvfj libLAS-*
@@ -68,7 +68,7 @@ mkdir build && cd $_
 cmake .. && make -j4 && sudo make install
 cd $HOME && rm -rf libLAS-*
 
-# Setup libharu
+# Setup libharu (PDF Generator)
 debug "Downloading libharu"
 cd $HOME
 git clone https://github.com/libharu/libharu.git
@@ -77,11 +77,6 @@ cd libharu
 mkdir build && cd $_
 cmake .. && make -j4 && sudo make install
 cd $HOME && rm -rf libharu
-
-# Add Apollo wallpaper to the default location
-debug "Setting wallpaper"
-mv $INSTALLER_DIR/base-setup/wallpaper.png /usr/share/backgrounds
-chown -R $USER_NAME:$USER_NAME /usr/share/backgrounds
 
 # Install modules
 debug "Installing modules"

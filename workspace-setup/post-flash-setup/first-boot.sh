@@ -39,5 +39,6 @@ pm2 start $HOME/workspace/fos/fos-gateway/index.js --name gateway
 pm2 start $HOME/workspace/fos/fos-status-checks/index.js --name status-checks
 pm2 start $HOME/workspace/fos/fos-flight-stack/mavproxy_start.sh --name mavproxy
 pm2 start $HOME/workspace/fos/fos-flight-stack/start.sh --name flight-stack
+pm2 start $HOME/workspace/apx_ros/startup.sh --name apx_ros
 pm2 save && pm2 startup
 sudo env PATH=$PATH:/home/apollo/.nvm/versions/node/$(nvm current)/bin /home/apollo/.nvm/versions/node/$(nvm current)/lib/node_modules/pm2/bin/pm2 startup systemd -u apollo --hp /home/apollo

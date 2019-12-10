@@ -6,9 +6,8 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F42ED6FBAB17C654
 sudo apt-get update
 sudo apt-get install -y ros-kinetic-desktop-full
 sudo apt-get install -y python-rosinstall python-rosinstall-generator python-wstool build-essential
-sudo apt-get install ros-kinetic-pcl-ros ros-kinetic-tf2-geometry-msgs ros-kinetic-rviz ros-kinetic-rosbash 
+sudo apt-get install -y ros-kinetic-pcl-ros ros-kinetic-tf2-geometry-msgs ros-kinetic-rviz ros-kinetic-rosbash 
 sudo apt-get install -y python-catkin-tools python-rosinstall-generator
-sudo apt-get install -y ros-kinetic-mavros ros-kinetic-mavros-extras
 
 # Install geoLib
 cd $HOME
